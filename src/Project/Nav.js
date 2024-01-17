@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IoMdMenu, IoMdClose } from 'react-icons/io';
 import LoginModal from './LoginModal';
-const Nav = ({ isNavVisible, setNavVisible , buttonColor, handleButtonClick, screenId}) => {
+const Nav = ({ isNavVisible, setNavVisible , buttonColor, handleButtonClick, screenId, isModalOpen, openMyModal, isLogin}) => {
   // const [isModalOpen, setModalOpen] = useState(false);
   
   const toggleNav = () => {
@@ -18,10 +18,10 @@ const Nav = ({ isNavVisible, setNavVisible , buttonColor, handleButtonClick, scr
   //   });
 
   // };
-  // const openModal = () => {
+  const openModal = () => {
 
-  //     setModalOpen(true);
-  // };
+    isModalOpen(true);
+  };
 
   // const closeModal = () => {
   //   setModalOpen(false);
@@ -54,13 +54,23 @@ const Nav = ({ isNavVisible, setNavVisible , buttonColor, handleButtonClick, scr
               className={`cursor-pointer ${buttonColor === 2 ? 'text-orange-400' : ''} py-10`}
               onClick={() => handleButtonClick(2)}
             >
-              FitMe
+              Style
+            </li>
+            <li
+              className={` cursor-pointer py-10`}
+              onClick={!isLogin ? openModal : openMyModal}><span>{!isLogin ? 'LOGIN' : 'MYPAGE'}</span>
             </li>
             <li
               className={`cursor-pointer ${buttonColor === 3 ? 'text-orange-400' : ''} py-10`}
               onClick={() => handleButtonClick(3)}
             >
-              TOP10
+              Product
+            </li>
+            <li
+              className={`cursor-pointer ${buttonColor === 4 ? 'text-orange-400' : ''} py-10`}
+              onClick={() => handleButtonClick(4)}
+            >
+              Coordi
             </li>
             {/* <ul className='flex items-center'> */}
             {/* <li className='mr-5 cursor-pointer'  onClick={openModal}>LOGIN</li> */}

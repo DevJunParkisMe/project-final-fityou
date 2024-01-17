@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSpring, animated } from 'react-spring';
 import styles from './Modal.module.css'
-const LoginModal = ({ isOpen, onClose, screenId, isModalOpen, login, setSurveyOpen }) => {
+import SurveyModal from './SurveyModal';
+const LoginModal = ({ isOpen, surveyClose, isSurveyOpen, onClose, screenId, isModalOpen, login, setSurveyOpen, fetchGetMember }) => {
   const [id, setId] = useState("")
   const [pwd, setPwd] = useState("")
   const [cusNum, setCusNum] = useState("")
@@ -13,15 +14,19 @@ const LoginModal = ({ isOpen, onClose, screenId, isModalOpen, login, setSurveyOp
   const [isIdCheck, setIsIdCheck] = useState(true)
   const [isIdCheckClick, setIsIdCheckClick] = useState(false)
   const [loginCheck, setLoginCheck] = useState(true);
+  const [signUpSeq, setSignUpSeq] = useState(0);
   // 초기 topValue 설정
-  let topValue = '5%';
+  let topValue = '3%';
   // screenId가 2인 경우 38%로 설정
   if (screenId === 2) {
-    topValue = '38.5%';
+    topValue = '28%';
   }
   // screenId가 3인 경우 80%로 설정
   else if (screenId === 3) {
-    topValue = '72%';
+    topValue = '53%';
+  }
+  else if (screenId === 4) {
+    topValue = '78%';
   }
 
   const modalAnimation = useSpring({
@@ -97,10 +102,11 @@ const LoginModal = ({ isOpen, onClose, screenId, isModalOpen, login, setSurveyOp
           console.log("회원가입 성공")
           console.log(id, 'id')
           const data = await response.json()
-          console.log(data, 'Signup data')
+          console.log(data.seq, 'Signup data')
           setSignUpForm(false)
           setLoginPwd("")
           if (cusNum === "") {
+            setSignUpSeq(data.seq)
             fetchSurveyModalOpen(data.cusNum)
           }
           
@@ -162,7 +168,7 @@ const LoginModal = ({ isOpen, onClose, screenId, isModalOpen, login, setSurveyOp
           onClose()
           login(jwtToken)
         }, 400)
-        
+        fetchGetMember()
       }
       else if(response.status === 401){
         setLoginCheck(false)
@@ -234,10 +240,12 @@ const LoginModal = ({ isOpen, onClose, screenId, isModalOpen, login, setSurveyOp
     setIsIdCheckClick(false)
   }, [id])
   return (
+    <>
+    <SurveyModal isOpen={isSurveyOpen}  onClose={surveyClose} screenId={screenId} signUpSeq={signUpSeq}/>
     <div className={`modal ${isOpen ? 'block' : 'hidden'} absolute inset-0 h-full w-full bg-transparent z-30 `}>
       <animated.div
-        style={{ ...modalAnimation, top: topValue }}
-        className={`modal-content absolute w-1/2 h-1/4 left-1/4 top-0 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl`}>
+        style={{ ...modalAnimation, top: topValue, height:'20%' }}
+        className={`modal-content absolute w-1/2 left-1/4 top-0 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl`}>
         <span className="close text-3xl absolute top-2 right-4 cursor-pointer" onClick={onClose}>
           &times;
         </span>
@@ -331,6 +339,7 @@ const LoginModal = ({ isOpen, onClose, screenId, isModalOpen, login, setSurveyOp
         </div>
       </animated.div>
     </div>
+    </>
   );
 };
 export default LoginModal;

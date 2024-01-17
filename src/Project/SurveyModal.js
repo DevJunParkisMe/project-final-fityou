@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSpring, animated } from 'react-spring';
 import styles from './Modal.module.css'
-const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin}) => {
+const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin, signUpSeq}) => {
   
   const itemsPerPage = 8; // 한 번에 보여지는 아이템 수
   const totalItems = 24;
@@ -11,14 +11,17 @@ const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin}) => {
   const [elementArray, setElementArray] = useState([]);
   const [clickedElements, setClickedElements] = useState([]);
 // 초기 topValue 설정
-  let topValue = '5%';
+  let topValue = '3%';
   // screenId가 2인 경우 38%로 설정
   if (screenId === 2) {
-    topValue = '38.5%';
+    topValue = '23%';
   }
   // screenId가 3인 경우 80%로 설정
   else if (screenId === 3) {
-    topValue = '72%';
+    topValue = '53%';
+  }
+  else if (screenId === 4) {
+    topValue = '78%';
   }
   const modalAnimation = useSpring({
     opacity: isOpen ? 1 : 0,
@@ -28,6 +31,31 @@ const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin}) => {
     },
     reverse: !isOpen, // isModalOpen이 false가 되면 애니메이션을 초기화
   });
+
+  const fetchMemberLike = async () => {
+    try {
+      const response = await fetch(`http://10.125.121.220:8080/memlike`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({like: elementArray, seq: signUpSeq})
+      })  
+      if (response.ok) {
+        console.log("like 등록 성공")
+        console.log(response, 'like confirm data')
+        setElementArray([])
+        setClickedElements([])
+        onClose()
+      }
+      else {
+        console.log("등록 실패")
+      }
+    } catch (error) {
+      console.error("오류", error)
+    }
+  }
+
   const handleMouseEnter = (index) => {
     setHoverStates((prevStates) => prevStates.map((state, i) => (i === index ? true : state)));
   };
@@ -69,7 +97,7 @@ const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin}) => {
             <span className="close text-3xl absolute top-2 right-4 cursor-pointer text-white z-40" onClick={onClose}>
                 &times;
             </span>
-            <div className='grid grid-rows-2 grid-cols-4 w-full bg-white opacity-70 rounded-t-3xl' style={{height: "90%"}}>
+            <div className='grid grid-rows-2 grid-cols-4 w-full bg-white opacity-70 rounded-t-3xl' style={{height: "70%"}}>
             {[...Array(itemsPerPage)].map((_, index) => {
             const realIndex = startIndex + index;
             return (
@@ -106,7 +134,7 @@ const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin}) => {
                     {realIndex === 15 && 'CLASSIC'}
                     {realIndex === 16 && 'KITCH'}
                     {realIndex === 17 && 'TOMBOY'}
-                    {realIndex === 18 && 'FUNK'}
+                    {realIndex === 18 && 'PUNK'}
                     {realIndex === 19 && 'FEMININ'}
                     {realIndex === 20 && 'FREPPY'}
                     {realIndex === 21 && 'HIPPY'}
@@ -135,7 +163,7 @@ const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin}) => {
                       ? 'CLASSIC' : realIndex === 16 
                       ? 'KITCH' : realIndex === 17 
                       ? 'TOMBOY' : realIndex === 18 
-                      ? 'FUNK' : realIndex === 19 
+                      ? 'PUNK' : realIndex === 19 
                       ? 'FEMININ' : realIndex === 20 
                       ? 'FREPPY' : realIndex === 21 
                       ? 'HIPPY' : realIndex === 22 
@@ -150,9 +178,9 @@ const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin}) => {
             <div className='w-full flex bg-black rounded-b-3xl' style={{height: '10%'}}>
                 <h1 className='flex-1 font-KIMM_Bold flex items-center justify-center text-2xl text-white'>Choose Your Style !</h1>
                 <div className='flex-1 h-full flex px-5 items-center'>
-                    <div className='w-full h-2/3 mr-5 bg-lime-700 flex items-center justify-center text-white font-KIMM_Bold cursor-pointer rounded-xl' onClick={handlePrevBtn}><span>Prev</span></div>
-                    <div className='w-full h-2/3 mr-5 bg-slate-600 flex items-center justify-center text-white font-KIMM_Bold cursor-pointer rounded-xl' onClick={handleNextBtn}><span>Next</span></div>
-                    <div className='w-full h-2/3 bg-rose-900 flex items-center justify-center text-white font-KIMM_Bold cursor-pointer rounded-xl'><span>Confirm</span></div>
+                    <div className='w-full h-2/3 mr-5 bg-lime-700 flex items-center justify-center text-white font-KIMM_Bold cursor-pointer rounded-xl hover:bg-black' onClick={handlePrevBtn}><span>Prev</span></div>
+                    <div className='w-full h-2/3 mr-5 bg-slate-600 flex items-center justify-center text-white font-KIMM_Bold cursor-pointer rounded-xl hover:bg-black' onClick={handleNextBtn}><span>Next</span></div>
+                    <div className='w-full h-2/3 bg-rose-900 flex items-center justify-center text-white font-KIMM_Bold cursor-pointer rounded-xl hover:bg-black' onClick={fetchMemberLike}><span>Confirm</span></div>
                 </div>
             </div>
         </animated.div>

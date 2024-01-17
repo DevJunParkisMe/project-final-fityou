@@ -59,3 +59,36 @@
       transform: translateX(3px);
     }
   }
+
+  .hide {
+    animation: hideAni 0.7s ease-in-out forwards;
+  }
+
+  @keyframes hideAni {
+    0% {
+      opacity: 1;
+      transform: scale(100%)
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(0);
+    }
+  }
+
+  .show {
+    animation: showAni 0.7s ease-in-out forwards;
+    animation-delay: 0.7s;
+  }
+
+  @keyframes showAni {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(100%);
+    }
+  }

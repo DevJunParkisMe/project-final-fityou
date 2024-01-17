@@ -6,6 +6,7 @@ import FitMe from './FitMe';
 import Top10 from './Top10';
 import {debounce} from 'lodash'
 import { jwtDecode } from 'jwt-decode';
+import Coordi from './Coordi';
 const Index = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isNavVisible, setNavVisible] = useState(false);
@@ -15,6 +16,8 @@ const Index = () => {
   const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isClick, setIsClick] = useState(false);
+  const [userDatas, setUserDatas] = useState({});
+  const [isMyModalOpen, setMyModalOpen] = useState(false);
 //   const handleButtonClick = (screenId) => {
 //     console.log(screenId, 'screenId');
 //     const screenPosition = (screenId - 1) * window.innerHeight;
@@ -27,8 +30,24 @@ const Index = () => {
 //     // 클릭된 li에 대한 색상 변경
 //     setActiveItem(screenId);
 //   };
-
+  const openMyModal = () => {
+    const storedToken = localStorage.getItem('jwtToken');
+    if (storedToken) {
+      const decodedToken = jwtDecode(storedToken); // JWT 디코딩 라이브러리 사용
+      const currentTime = Date.now() / 1000; // 초로 변환
+      
+      if (decodedToken.exp && decodedToken.exp < currentTime) {
+        // 토큰이 만료됨, 로그아웃 처리
+        alert("세션이 만료되었습니다.")
+        logout();
+      }
+      else {
+        setMyModalOpen(true);
+      }
+    }
+  }
   const debouncedHandleButtonClick = debounce((screenId) => {
+    setNavVisible(true)
     console.log(screenId, 'screenId');
     const screenPosition = (screenId - 1) * window.innerHeight;
     console.log(screenPosition, 'screenPosition');
@@ -45,12 +64,16 @@ const Index = () => {
     setToken(jwtToken);
     localStorage.setItem('jwtToken', jwtToken);
     setIsLogin(true)
+    localStorage.removeItem('imgUrls')
+    localStorage.removeItem('storedData')
   }
   const logout = () => {
     setToken('')
     localStorage.removeItem('jwtToken')
     setIsLogin(false)
     setIsClick(false)
+    localStorage.removeItem('imgUrls')
+    localStorage.removeItem('storedData')
   }
   useEffect(() => {
     console.log(screenId, 'screenId')
@@ -109,18 +132,23 @@ const Index = () => {
           <div className='absolute w-full h-screen bg-black opacity-75'></div>
           <FullpageSection className="min-h-screen" style={{ backgroundImage: `url('/img/옷.jpg')` }}>
             {/* Pass the common color state to each Nav component */}
-            <Nav isNavVisible={isNavVisible} setNavVisible={setNavVisible} buttonColor={activeItem} handleButtonClick={debouncedHandleButtonClick} screenId={screenId}/>
-            {isLoading ? <Main handleButtonClick={debouncedHandleButtonClick} screenId={screenId} login={login} logout={logout} isLogin={isLogin} isModalOpen={isModalOpen} setModalOpen={setModalOpen}/> : <div></div>}
+            <Nav isNavVisible={isNavVisible} setNavVisible={setNavVisible} buttonColor={activeItem} handleButtonClick={debouncedHandleButtonClick} screenId={screenId} isModalOpen={setModalOpen} openMyModal={openMyModal} isLogin={isLogin}/>
+            {isLoading ? <Main setNavVisible={setNavVisible} handleButtonClick={debouncedHandleButtonClick} screenId={screenId} login={login} logout={logout} isLogin={isLogin} isModalOpen={isModalOpen} setModalOpen={setModalOpen} setUserDatas={setUserDatas} userDatas={userDatas} openMyModal={openMyModal} isMyModalOpen={isMyModalOpen} setMyModalOpen={setMyModalOpen}/> : <div></div>}
           </FullpageSection>
           <div className='absolute w-full h-screen bg-black opacity-75'></div>
           <FullpageSection className="min-h-screen" style={{ backgroundImage: `url('/img/옷2.jpg')` }}>
-            <Nav isNavVisible={isNavVisible} setNavVisible={setNavVisible} buttonColor={activeItem} handleButtonClick={debouncedHandleButtonClick} screenId={screenId}/>
-            <FitMe screenId={screenId} isModalOpen={isModalOpen} setModalOpen={setModalOpen} isClick={isClick} setIsClick={setIsClick}/>
+            <Nav isNavVisible={isNavVisible} setNavVisible={setNavVisible} buttonColor={activeItem} handleButtonClick={debouncedHandleButtonClick} screenId={screenId} isModalOpen={setModalOpen} openMyModal={openMyModal} isLogin={isLogin}/>
+            <FitMe screenId={screenId} isModalOpen={isModalOpen} setModalOpen={setModalOpen} isClick={isClick} setIsClick={setIsClick} userDatas={userDatas}/>
           </FullpageSection>
           <div className='absolute w-full h-screen bg-black opacity-75'></div>
-          <FullpageSection className="min-h-screen" style={{ backgroundImage: `url('/img/옷6.jpg')` }}>
-            <Nav isNavVisible={isNavVisible} setNavVisible={setNavVisible} buttonColor={activeItem} handleButtonClick={debouncedHandleButtonClick} screenId={screenId} />
+          <FullpageSection className="min-h-screen" style={{ backgroundImage: `url('/img/옷.jpg')` }}>
+            <Nav isNavVisible={isNavVisible} setNavVisible={setNavVisible} buttonColor={activeItem} handleButtonClick={debouncedHandleButtonClick} screenId={screenId} isModalOpen={setModalOpen} openMyModal={openMyModal} isLogin={isLogin}/>
             <Top10 />
+          </FullpageSection>
+          <div className='absolute w-full h-screen bg-black opacity-75'></div>
+          <FullpageSection className="min-h-screen" style={{ backgroundImage: `url('/img/옷.jpg')` }}>
+            <Nav isNavVisible={isNavVisible} setNavVisible={setNavVisible} buttonColor={activeItem} handleButtonClick={debouncedHandleButtonClick} screenId={screenId} isModalOpen={setModalOpen} openMyModal={openMyModal} isLogin={isLogin} />
+            <Coordi screenId={screenId}/>
           </FullpageSection>
         </FullPageSections>
       </Fullpage>
