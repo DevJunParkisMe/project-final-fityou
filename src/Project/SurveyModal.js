@@ -14,7 +14,7 @@ const SurveyModal = ({isOpen, onOpen, onClose, screenId, isLogin, signUpSeq}) =>
   let topValue = '3%';
   // screenId가 2인 경우 38%로 설정
   if (screenId === 2) {
-    topValue = '23%';
+    topValue = '28%';
   }
   // screenId가 3인 경우 80%로 설정
   else if (screenId === 3) {

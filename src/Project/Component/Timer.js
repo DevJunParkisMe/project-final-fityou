@@ -24,9 +24,9 @@ const Timer = ({onClose, setIsAlert}) => {
     return (
         <div className='font-KIMM_Bold flex gap-2'>
             <div className='text-white font-KIMM_Bold'>
-                {seconds >= 8 
+                {seconds >= 4 
                 ? '상품 목록을 완성중입니다.' 
-                : seconds >= 4 
+                : seconds >= 2 
                 ? '분석 결과를 바탕으로 추천 상품을 찾고 있습니다.'
                 : '선택한 상품의 이미지를 분석 중입니다.' }</div>
             <p className='text-white'>({seconds}s)</p>

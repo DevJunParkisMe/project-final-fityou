@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSpring, animated } from 'react-spring';
 import styles from './Modal.module.css'
-const DeleteModal = ({isOpen, onClose}) => {
+const DeleteModal = ({isOpen, onClose, screenId}) => {
     const [pwdConfirm, setPwdConfirm] = useState();
     const [isPwdMatched, setIsPwdMatched] = useState(true);
     const modalAnimation = useSpring({
@@ -12,7 +12,19 @@ const DeleteModal = ({isOpen, onClose}) => {
         },
         reverse: !isOpen, // isModalOpen이 false가 되면 애니메이션을 초기화
       });
-
+  // 초기 topValue 설정
+  let topValue = '10%';
+  // screenId가 2인 경우 38%로 설정
+  if (screenId === 2) {
+    topValue = '35%';
+  }
+  // screenId가 3인 경우 80%로 설정
+  else if (screenId === 3) {
+    topValue = '60%';
+  }
+  else if (screenId === 4) {
+    topValue = '85%';
+  }
     const fetchUserDelete = async () => {
         setIsPwdMatched(true)
         try {
@@ -43,7 +55,7 @@ const DeleteModal = ({isOpen, onClose}) => {
   return (
     <div className={`${isOpen ? 'block':'hidden'}`}>
       <animated.div
-      style={{ ...modalAnimation, top: '12%'}}
+      style={{ ...modalAnimation, top: topValue}}
       className={`modal-content absolute w-1/2 h-60 left-1/4 top-0 transform -translate-x-1/2 -translate-y-1/2 bg-gray-400 rounded-2xl z-40`}>
         <span className="close text-3xl absolute top-2 right-4 cursor-pointer text-black" onClick={onClose}>
           &times;

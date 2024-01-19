@@ -2,7 +2,7 @@ import { click } from '@testing-library/user-event/dist/click';
 import React, { useEffect, useRef, useState } from 'react'
 import { useSpring, animated } from 'react-spring';
 import LoadingModal from './LoadingModal';
-const ItemSelectModal = ({isOpen, onClose, userDatas, setFitMeProducts}) => {
+const ItemSelectModal = ({isOpen, onClose, userDatas, setFitMeProducts, setIsClick}) => {
   const ref = useRef();
   const [products, setProducts] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -62,6 +62,7 @@ const ItemSelectModal = ({isOpen, onClose, userDatas, setFitMeProducts}) => {
               console.log(data, 'data')
               localStorage.setItem("storedData", JSON.stringify(data))
               setFitMeProducts(data)
+              setIsClick(true)
               onClose()
           } else {
               console.error('서버 응답 오류', response.status);
@@ -71,7 +72,7 @@ const ItemSelectModal = ({isOpen, onClose, userDatas, setFitMeProducts}) => {
       }
       // 원하는 작업이 완료되면 로딩 상태를 다시 닫기
       setLoadingModalOpen(false);
-  }, 10000);
+  }, 4000);
   }
   const closeLoadingModal = () => {
     setLoadingModalOpen(false)

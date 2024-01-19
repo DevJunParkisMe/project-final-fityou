@@ -355,7 +355,7 @@ const FitMe = ({screenId, isModalOpen, setModalOpen, isClick, setIsClick, userDa
 
     return (
       <>
-        <ItemSelectModal isOpen={isItemSelectModal} onClose={itemSelectModalClose} userDatas={latestDatas} setFitMeProducts={setProducts}/>
+        <ItemSelectModal isOpen={isItemSelectModal} onClose={itemSelectModalClose} userDatas={latestDatas} setFitMeProducts={setProducts} setIsClick={setIsClick}/>
         <div className='overflow-x-auto'>
             <animated.div 
             className={`${styles.animatedDiv} cursor-pointer flex justify-center items-center bg-orange-300 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 mx-auto shadow-lg rounded-full`} 

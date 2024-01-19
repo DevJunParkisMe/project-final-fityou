@@ -95,7 +95,7 @@ const MypageModal = ({isOpen, onClose, logout, userDatas, screenId}) => {
     }
   return (
     <>
-    <DeleteModal isOpen={isDeleteModalOpen} onClose={deleteModalClose} />
+    <DeleteModal isOpen={isDeleteModalOpen} onClose={deleteModalClose} screenId={screenId} />
     <div className={`modal ${isOpen ? 'block' : 'hidden'} absolute inset-0 h-full w-full bg-transparent z-30 `}>
       
       <animated.div
